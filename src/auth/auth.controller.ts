@@ -1,12 +1,14 @@
-import { HttpException, HttpStatus, Body, Controller, Post } from '@nestjs/common';
+import { HttpException, HttpStatus, Body, Controller, Post, Res, Get, Req } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './models/register.dto';
-
+import { JwtService } from "@nestjs/jwt"
+import { Request, Response } from 'express';
 
 @Controller()
 export class AuthController {
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService,
+        private jwtService: JwtService) { }
 
     @Post('register')
     async register(@Body() body: RegisterDto) {
@@ -26,7 +28,8 @@ export class AuthController {
     @Post('login')
     async login(
         @Body('email') email: string,
-        @Body('password') password: string
+        @Body('password') password: string,
+        @Res() response: Response //@Res({ passthrough: true }) is not needed since enableCors is in main.ts
     ) {
         const user = this.userService.findOne({ where: { email: email } });
 
@@ -38,6 +41,21 @@ export class AuthController {
             throw new HttpException('Invalid credentials.', HttpStatus.BAD_REQUEST);
         }
 
+        const jwt = await this.jwtService.signAsync({ id: (await user).id });
+
+        response.cookie('jwt', jwt, { httpOnly: true });
+
         return user;
+    }
+
+    @Get('user')
+    async user(
+        @Req() request: Request
+    ) {
+        const cookie = request.cookies['jwt'];
+
+        const data = await this.jwtService.verifyAsync(cookie);
+
+        return this.userService.findOne({ where: { id: data['id'] } });
     }
 }
