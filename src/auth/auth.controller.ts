@@ -22,4 +22,22 @@ export class AuthController {
             password: hashed
         });
     }
+
+    @Post('login')
+    async login(
+        @Body('email') email: string,
+        @Body('password') password: string
+    ) {
+        const user = this.userService.findOne({ where: { email: email } });
+
+        if (!user) {
+            throw new HttpException('User not found.', HttpStatus.BAD_REQUEST);
+        }
+
+        if (!await bcrypt.compare(password, (await user).password)) {
+            throw new HttpException('Invalid credentials.', HttpStatus.BAD_REQUEST);
+        }
+
+        return user;
+    }
 }

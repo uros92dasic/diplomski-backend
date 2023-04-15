@@ -13,4 +13,8 @@ export class UserService {
     async create(createUserDto: CreateUserDto) {
         return this.prisma.user.create({ data: createUserDto });
     }
+
+    async findOne(condition) {
+        return this.prisma.user.findUnique(condition);
+    }
 }
