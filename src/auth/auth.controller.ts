@@ -1,12 +1,14 @@
-import { HttpException, HttpStatus, Body, Controller, Post } from '@nestjs/common';
+import { HttpException, HttpStatus, Body, Controller, Post, Res } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './models/register.dto';
-
+import { JwtService } from "@nestjs/jwt"
+import { Response } from 'express';
 
 @Controller()
 export class AuthController {
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService,
+        private jwtService: JwtService) { }
 
     @Post('register')
     async register(@Body() body: RegisterDto) {
@@ -26,7 +28,8 @@ export class AuthController {
     @Post('login')
     async login(
         @Body('email') email: string,
-        @Body('password') password: string
+        @Body('password') password: string,
+        @Res({ passthrough: true }) response: Response
     ) {
         const user = this.userService.findOne({ where: { email: email } });
 
@@ -37,6 +40,10 @@ export class AuthController {
         if (!await bcrypt.compare(password, (await user).password)) {
             throw new HttpException('Invalid credentials.', HttpStatus.BAD_REQUEST);
         }
+
+        const jwt = await this.jwtService.signAsync({ id: (await user).id });
+
+        response.cookie('jwt', jwt, { httpOnly: true });
 
         return user;
     }
