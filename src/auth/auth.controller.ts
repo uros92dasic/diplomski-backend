@@ -29,7 +29,7 @@ export class AuthController {
     async login(
         @Body('email') email: string,
         @Body('password') password: string,
-        @Res() response: Response //@Res({ passthrough: true }) is not needed since enableCors is in main.ts
+        @Res({ passthrough: true }) response: Response
     ) {
         const user = this.userService.findOne({ where: { email: email } });
 
@@ -46,6 +46,15 @@ export class AuthController {
         response.cookie('jwt', jwt, { httpOnly: true });
 
         return user;
+    }
+
+    @Post('logout')
+    async logout(@Res({ passthrough: true }) response: Response) {
+        response.clearCookie('jwt');
+
+        return {
+            message: 'Logout successful'
+        }
     }
 
     @Get('user')
