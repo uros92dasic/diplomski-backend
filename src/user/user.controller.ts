@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -12,8 +12,8 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Get()
-    getAll() {
-        return this.userService.findAll();
+    getAll(@Query('page') page: number = 1) {
+        return this.userService.paginate(page);
     }
 
     @Post()

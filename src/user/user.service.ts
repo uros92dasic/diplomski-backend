@@ -6,6 +6,31 @@ import { User } from '@prisma/client';
 export class UserService {
     constructor(private prisma: PrismaService) { }
 
+    async paginate(page = 1) {
+        const take = 15;
+        const skip = (page - 1) * take;
+
+        const users = await this.prisma.user.findMany({
+            take,
+            skip
+        });
+
+        const total = await this.prisma.user.count();
+
+        return {
+            data: users.map(user => {
+                const { password, createdAt, updatedAt, ...data } = user;
+
+                return data;
+            }),
+            meta: {
+                total,
+                page,
+                lastPage: Math.ceil(total / take)
+            }
+        }
+    }
+
     findAll() {
         return this.prisma.user.findMany();
     }
