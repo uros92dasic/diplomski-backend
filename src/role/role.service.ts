@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateRoleDto } from './models/create-role.dto';
 
 @Injectable()
 export class RoleService {
@@ -31,8 +32,26 @@ export class RoleService {
         return this.prisma.role.findMany();
     }
 
-    async create(body): Promise<Role> {
-        return this.prisma.role.create(body);
+    async create(body: CreateRoleDto) {
+        const { name, permissions } = body;
+
+        return this.prisma.role.create({
+            data: {
+                name,
+                rolePermissions: {
+                    create: permissions.map(permissionId => ({
+                        permission: { connect: { id: permissionId } },
+                    })),
+                },
+            },
+            include: {
+                rolePermissions: {
+                    include: {
+                        permission: true,
+                    },
+                },
+            },
+        });
     }
 
     async findOne(condition) {
