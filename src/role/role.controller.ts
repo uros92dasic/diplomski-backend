@@ -14,12 +14,8 @@ export class RoleController {
     }
 
     @Post()
-    async create(@Body() body: CreateRoleDto): Promise<Role> {
-        return this.roleService.create({
-            data: {
-                name: body.name,
-            }
-        });
+    async create(@Body() createRoleDto: CreateRoleDto) {
+        return this.roleService.create(createRoleDto);
     }
 
     @Get(':id')
