@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoleDto } from './models/create-role.dto';
+import { UpdateRoleDto } from './models/update-role.dto';
 
 @Injectable()
 export class RoleService {
@@ -28,10 +29,6 @@ export class RoleService {
         }
     }
 
-    findAll() {
-        return this.prisma.role.findMany();
-    }
-
     async create(body: CreateRoleDto) {
         const { name, permissions } = body;
 
@@ -54,17 +51,55 @@ export class RoleService {
         });
     }
 
-    async findOne(condition) {
-        return this.prisma.role.findUnique(condition);
+    async update(id: number, body: UpdateRoleDto) {
+        const { name, permissions } = body;
+
+        const updateData: Prisma.RoleUpdateInput = {};
+
+        if (name) {
+            updateData.name = name;
+        }
+
+        if (permissions) {
+            updateData.rolePermissions = {
+                deleteMany: {},
+            };
+
+            Object.assign(updateData.rolePermissions, {
+                create: permissions.map(permissionId => ({
+                    permission: { connect: { id: permissionId } },
+                })),
+            });
+        }
+
+        return this.prisma.role.update({
+            where: { id },
+            data: updateData,
+            include: {
+                rolePermissions: {
+                    include: {
+                        permission: true,
+                    },
+                },
+            },
+        });
     }
 
-    async update(id: number, data): Promise<any> {
-        return this.prisma.role.update({
-            where: {
-                id
-            },
-            data: data
-        })
+    findAll() {
+        return this.prisma.role.findMany();
+    }
+
+    async findOne(condition) {
+        return this.prisma.role.findUnique({
+            ...condition,
+            include: {
+                rolePermissions: {
+                    include: {
+                        permission: true
+                    }
+                }
+            }
+        });
     }
 
     async remove(id: number): Promise<any> {
