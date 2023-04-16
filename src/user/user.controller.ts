@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './models/create-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
@@ -25,5 +27,10 @@ export class UserController {
                 password: password
             }
         });
+    }
+
+    @Get(':id')
+    async get(@Param('id') id: number) {
+        return this.userService.findOne({ where: { id: +id } })
     }
 }
