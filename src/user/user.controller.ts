@@ -25,7 +25,8 @@ export class UserController {
                 firstName: body.firstName,
                 lastName: body.lastName,
                 email: body.email,
-                password: password
+                password: password,
+                roleId: body.roleId
             }
         });
     }
