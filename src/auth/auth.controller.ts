@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './models/register.dto';
 import { JwtService } from "@nestjs/jwt"
 import { Request, Response } from 'express';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard } from './auth.guard';
 
 @Controller()
 export class AuthController {
