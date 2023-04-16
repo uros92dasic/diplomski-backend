@@ -1,9 +1,10 @@
-import { HttpException, HttpStatus, Body, Controller, Post, Res, Get, Req } from '@nestjs/common';
+import { HttpException, HttpStatus, Body, Controller, Post, Res, Get, Req, UseGuards } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './models/register.dto';
 import { JwtService } from "@nestjs/jwt"
 import { Request, Response } from 'express';
+import { AuthGuard } from './auth/auth.guard';
 
 @Controller()
 export class AuthController {
@@ -48,6 +49,7 @@ export class AuthController {
         return user;
     }
 
+    @UseGuards(AuthGuard)
     @Post('logout')
     async logout(@Res({ passthrough: true }) response: Response) {
         response.clearCookie('jwt');
@@ -57,6 +59,7 @@ export class AuthController {
         }
     }
 
+    @UseGuards(AuthGuard)
     @Get('user')
     async user(
         @Req() request: Request
