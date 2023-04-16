@@ -16,4 +16,8 @@ export class RegisterDto {
 
     @IsNotEmpty()
     passwordConfirm: string;
+
+    @IsNotEmpty()
+    roleId: number;
+
 }
