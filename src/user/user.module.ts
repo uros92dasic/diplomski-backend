@@ -3,10 +3,12 @@ import { UserController } from './user.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from './user.service';
 import { CommonModule } from 'src/common/common.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    CommonModule
+    CommonModule,
+    AuthModule
   ],
   controllers: [UserController],
   providers: [PrismaService, UserService],

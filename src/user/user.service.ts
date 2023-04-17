@@ -39,7 +39,7 @@ export class UserService {
         return this.prisma.user.create(body);
     }
 
-    async findOne(condition) {
+    async findOne(condition): Promise<any> {
         return this.prisma.user.findUnique(condition);
     }
 
