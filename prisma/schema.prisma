@@ -22,6 +22,8 @@ model User {
 
   roleId Int
   role   Role @relation(fields: [roleId], references: [id])
+
+  products Product[]
 }
 
 model Role {
@@ -57,4 +59,18 @@ model RolePermission {
   permission   Permission @relation(fields: [permissionId], references: [id])
 
   @@unique([roleId, permissionId])
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title       String
+  description String
+  image       String
+  price       Int
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
