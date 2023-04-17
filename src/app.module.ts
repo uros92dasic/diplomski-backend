@@ -7,10 +7,11 @@ import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { RoleModule } from './role/role.module';
 import { PermissionModule } from './permission/permission.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [UserModule, AuthModule, CommonModule, RoleModule, PermissionModule],
+  imports: [UserModule, AuthModule, CommonModule, RoleModule, PermissionModule, ProductModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
-export class AppModule {}
+export class AppModule { }
