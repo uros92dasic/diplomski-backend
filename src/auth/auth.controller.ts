@@ -5,11 +5,15 @@ import { RegisterDto } from './models/register.dto';
 import { JwtService } from "@nestjs/jwt"
 import { Request, Response } from 'express';
 import { AuthGuard } from './auth.guard';
+import { AuthService } from './auth.service';
 
 @Controller()
 export class AuthController {
-    constructor(private userService: UserService,
-        private jwtService: JwtService) { }
+    constructor(
+        private userService: UserService,
+        private jwtService: JwtService,
+        private authService: AuthService
+    ) { }
 
     @Post('register')
     async register(@Body() body: RegisterDto) {
@@ -67,10 +71,9 @@ export class AuthController {
     async user(
         @Req() request: Request
     ) {
-        const cookie = request.cookies['jwt'];
+        const userId = await this.authService.userId(request);
 
-        const data = await this.jwtService.verifyAsync(cookie);
-
-        return this.userService.findOne({ where: { id: data['id'] } });
+        return this.userService.findOne({ where: { id: +userId } });
     }
+
 }
