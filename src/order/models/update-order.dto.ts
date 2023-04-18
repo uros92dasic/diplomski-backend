@@ -1,5 +1,7 @@
-export class UpdateOrderDto {
-    userId?: number;
+import { IsOptional, IsNumber } from 'class-validator';
 
-    orderItems?: number[];
+export class UpdateOrderDto {
+    @IsNumber()
+    @IsOptional()
+    total?: number;
 }

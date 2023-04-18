@@ -1,5 +1,6 @@
 import { Order } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { OrderItemEntity } from './order-item.entity';
 
 export class OrderEntity implements Order {
     @ApiProperty()
@@ -16,4 +17,7 @@ export class OrderEntity implements Order {
 
     @ApiProperty()
     total: number;
+
+    @ApiProperty({ type: () => [OrderItemEntity] })
+    orderItems: OrderItemEntity[];
 }

@@ -106,3 +106,7 @@ model OrderItem {
 
   @@unique([orderId, productId])
 }
+
+//product > article
+//order > salesOrder
+//orderItem > salesOrderArticle
