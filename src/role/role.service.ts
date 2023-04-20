@@ -9,12 +9,24 @@ export class RoleService {
     constructor(private prisma: PrismaService) { }
 
     async paginate(page = 1) {
-        const take = 15;
+        const take = 10;
         const skip = (page - 1) * take;
 
         const roles = await this.prisma.role.findMany({
             take,
-            skip
+            skip,
+            include: {
+                users: {
+                    include: {
+                        products: true
+                    }
+                },
+                rolePermissions: {
+                    include: {
+                        permission: true
+                    }
+                }
+            }
         });
 
         const total = await this.prisma.role.count();
@@ -76,6 +88,11 @@ export class RoleService {
             where: { id },
             data: updateData,
             include: {
+                users: {
+                    include: {
+                        products: true
+                    }
+                },
                 rolePermissions: {
                     include: {
                         permission: true,
@@ -86,12 +103,22 @@ export class RoleService {
     }
 
     findAll() {
-        return this.prisma.role.findMany();
+        return this.prisma.role.findMany({
+            include: {
+                rolePermissions: {
+                    include: {
+                        permission: true
+                    }
+                }
+            }
+        });
     }
 
-    async findOne(condition) {
+    async findOne(id: number) {
         return this.prisma.role.findUnique({
-            ...condition,
+            where: {
+                id
+            },
             include: {
                 rolePermissions: {
                     include: {

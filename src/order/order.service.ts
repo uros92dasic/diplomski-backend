@@ -9,7 +9,7 @@ export class OrderService {
     constructor(private readonly prisma: PrismaService) { }
 
     async paginateOrders(page = 1) {
-        const take = 15;
+        const take = 10;
         const skip = (page - 1) * take;
 
         const roles = await this.prisma.order.findMany({
