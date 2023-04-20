@@ -7,7 +7,7 @@ export class ProductService {
     constructor(private prisma: PrismaService) { }
 
     async paginate(page = 1) {
-        const take = 15;
+        const take = 10;
         const skip = (page - 1) * take;
 
         const roles = await this.prisma.product.findMany({

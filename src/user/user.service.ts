@@ -7,12 +7,15 @@ export class UserService {
     constructor(private prisma: PrismaService) { }
 
     async paginate(page = 1) {
-        const take = 15;
+        const take = 10;
         const skip = (page - 1) * take;
 
         const users = await this.prisma.user.findMany({
             take,
-            skip
+            skip,
+            include: {
+                role: true
+            }
         });
 
         const total = await this.prisma.user.count();
@@ -40,16 +43,28 @@ export class UserService {
     }
 
     async findOne(condition): Promise<any> {
-        return this.prisma.user.findUnique(condition);
+        return this.prisma.user.findUnique({ ...condition, include: { role: true } });
     }
 
     async update(id: number, data): Promise<any> {
+        const { roleId, ...restData } = data;
+
         return this.prisma.user.update({
             where: {
                 id
             },
-            data: data
-        })
+            data: {
+                ...restData,
+                role: {
+                    connect: {
+                        id: parseInt(roleId)
+                    }
+                }
+            },
+            include: {
+                role: true
+            }
+        });
     }
 
     async remove(id: number): Promise<any> {

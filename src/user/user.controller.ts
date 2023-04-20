@@ -9,7 +9,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { Request } from 'express';
 
 @Controller('users')
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 export class UserController {
     constructor(
         private readonly userService: UserService,
@@ -31,7 +31,7 @@ export class UserController {
                 lastName: body.lastName,
                 email: body.email,
                 password: password,
-                roleId: body.roleId
+                roleId: +(body.roleId)
             }
         });
     }
@@ -70,7 +70,7 @@ export class UserController {
             password: hashed
         });
 
-        return this.userService.findOne({ where: { id: +userId } })
+        return this.userService.findOne(+userId)
 
     }
 

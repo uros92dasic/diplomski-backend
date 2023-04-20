@@ -56,7 +56,7 @@ export class AuthController {
         return user;
     }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Post('logout')
     async logout(@Res({ passthrough: true }) response: Response) {
         response.clearCookie('jwt');
@@ -66,7 +66,7 @@ export class AuthController {
         }
     }
 
-    @UseGuards(AuthGuard)
+    // @UseGuards(AuthGuard)
     @Get('user')
     async user(
         @Req() request: Request

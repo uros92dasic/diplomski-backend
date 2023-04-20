@@ -20,7 +20,7 @@ export class RoleController {
 
     @Get(':id')
     async get(@Param('id') id: number) {
-        return this.roleService.findOne({ where: { id: +id } })
+        return this.roleService.findOne(+id)
     }
 
     @Patch(':id')
