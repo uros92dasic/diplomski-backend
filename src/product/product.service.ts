@@ -44,7 +44,13 @@ export class ProductService {
             where: {
                 id
             },
-            data: data
+            data: {
+                title: data.title,
+                description: data.description,
+                image: data.image,
+                price: +(data.price),
+                userId: data.userId
+            }
         })
     }
 
