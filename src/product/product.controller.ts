@@ -23,7 +23,7 @@ export class ProductController {
                 title: body.title,
                 description: body.description,
                 image: body.image,
-                price: body.price,
+                price: +(body.price),
                 userId: body.userId
             }
         });
