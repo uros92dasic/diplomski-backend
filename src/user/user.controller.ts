@@ -70,7 +70,7 @@ export class UserController {
             password: hashed
         });
 
-        return this.userService.findOne(+userId)
+        return this.userService.findOne({ where: { id: +userId } })
 
     }
 
