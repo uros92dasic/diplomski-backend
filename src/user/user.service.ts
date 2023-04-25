@@ -47,19 +47,21 @@ export class UserService {
     }
 
     async update(id: number, data): Promise<any> {
-        const { roleId, ...restData } = data;
+        // const { roleId, ...restData } = data;
 
         return this.prisma.user.update({
             where: {
                 id
             },
             data: {
-                ...restData,
-                role: {
-                    connect: {
-                        id: parseInt(roleId)
-                    }
-                }
+                // ...restData,
+                // role: {
+                //     connect: {
+                //         id: parseInt(roleId)
+                //     }
+                // }
+                ...data,
+                roleId: data.roleId
             },
             include: {
                 role: true
