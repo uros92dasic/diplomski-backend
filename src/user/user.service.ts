@@ -47,27 +47,26 @@ export class UserService {
     }
 
     async update(id: number, data): Promise<any> {
-        // const { roleId, ...restData } = data;
+        const { roleId, ...restData } = data;
 
         return this.prisma.user.update({
             where: {
                 id
             },
             data: {
-                // ...restData,
-                // role: {
-                //     connect: {
-                //         id: parseInt(roleId)
-                //     }
-                // }
-                ...data,
-                roleId: data.roleId
+                ...restData,
+                role: {
+                    connect: {
+                        id: parseInt(roleId)
+                    }
+                }
             },
             include: {
                 role: true
             }
         });
     }
+
 
     async remove(id: number): Promise<any> {
         return this.prisma.user.delete({ where: { id } })
