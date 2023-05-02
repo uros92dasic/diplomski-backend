@@ -48,7 +48,7 @@ export class UserController {
     ) {
         const userId = await this.authService.userId(request);
 
-        await this.userService.update(+userId, body);
+        await this.userService.profileUpdate(+userId, body);
 
         return this.userService.findOne({ where: { id: +userId } })
     }
@@ -66,12 +66,9 @@ export class UserController {
 
         const userId = await this.authService.userId(request);
 
-        await this.userService.update(+userId, {
-            password: hashed
-        });
+        await this.userService.updatePassword(+userId, hashed);
 
         return this.userService.findOne({ where: { id: +userId } })
-
     }
 
     @Patch(':id')
