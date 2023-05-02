@@ -130,6 +130,18 @@ export class RoleService {
     }
 
     async remove(id: number): Promise<any> {
-        return this.prisma.role.delete({ where: { id } })
+        // First, delete the related RolePermission records
+        await this.prisma.rolePermission.deleteMany({
+            where: {
+                roleId: id,
+            },
+        });
+
+        // Then, delete the role
+        return this.prisma.role.delete({
+            where: {
+                id,
+            },
+        });
     }
 }
