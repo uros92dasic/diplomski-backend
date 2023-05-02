@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Res, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Res, UseInterceptors, } from '@nestjs/common';
 import { Response } from 'express';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './models/create-order.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('orders')
 export class OrderController {
@@ -40,4 +41,21 @@ export class OrderController {
     async getOrderById(@Param('orderId', ParseIntPipe) orderId: number) {
         return await this.orderService.getOrderById(orderId);
     }
+
+    @Get('export/:orderId')
+    async exportOrderById(@Param('orderId', ParseIntPipe) orderId: number, @Res() res: Response) {
+        try {
+            const readable = await this.orderService.exportOrderById(orderId);
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader(
+                'Content-Disposition',
+                `attachment; filename=order-${orderId}-export.csv`,
+            );
+            readable.pipe(res);
+        } catch (error) {
+            console.error('Error in exportOrderById:', error.message);
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: error.message });
+        }
+    }
+
 }
