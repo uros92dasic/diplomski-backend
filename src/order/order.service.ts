@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './models/create-order.dto';
+import { Readable } from 'stream';
+import * as Papa from 'papaparse';
 
 @Injectable()
 export class OrderService {
@@ -105,6 +107,44 @@ export class OrderService {
             where: { id: orderId },
             include: { orderItems: { include: { product: true } } },
         });
+    }
+
+    async exportOrderById(orderId: number): Promise<Readable> {
+        const order = await this.prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                user: true,
+                orderItems: {
+                    include: {
+                        product: true,
+                    },
+                },
+            },
+        });
+
+        if (!order) {
+            throw new Error('Order not found');
+        }
+
+        const data = [
+            {
+                fullName: `${order.user.firstName} ${order.user.lastName}`,
+                orderId: order.id,
+                orderItems: order.orderItems.map(
+                    (item) =>
+                        `Product: ${item.product.title}, Quantity: ${item.quantity}`,
+                ),
+                totalPrice: order.total,
+            },
+        ];
+
+        const csv = Papa.unparse(data);
+        const readable = new Readable();
+        readable._read = () => { }; // _read is required but you can noop it
+        readable.push(csv);
+        readable.push(null);
+
+        return readable;
     }
 
 }
