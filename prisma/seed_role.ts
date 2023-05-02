@@ -15,7 +15,7 @@ export const seedRole = async () => {
             const role: any = parsedCsvData[index];
             const roles = await prisma.role.create({
                 data: {
-                    id: parseInt(role[0]),
+                    // id: parseInt(role[0]), causes an error when trying to create a new role, should be handled by database automatically
                     name: role[1]
                 },
             });
