@@ -38,12 +38,12 @@ export class UserService {
         return this.prisma.user.findMany();
     }
 
-    async create(body): Promise<User> {
-        return this.prisma.user.create(body);
-    }
-
     async findOne(condition): Promise<any> {
         return this.prisma.user.findUnique({ ...condition, include: { role: true } });
+    }
+
+    async create(body): Promise<User> {
+        return this.prisma.user.create(body);
     }
 
     async update(id: number, data): Promise<any> {
@@ -67,8 +67,27 @@ export class UserService {
         });
     }
 
-
     async remove(id: number): Promise<any> {
         return this.prisma.user.delete({ where: { id } })
+    }
+
+    async profileUpdate(id: number, data): Promise<User> {
+        return this.prisma.user.update({
+            where: { id },
+            data: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email
+            }
+        });
+    }
+
+    async updatePassword(id: number, hashedPassword: string): Promise<User> {
+        return this.prisma.user.update({
+            where: { id },
+            data: {
+                password: hashedPassword,
+            },
+        });
     }
 }
