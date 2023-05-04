@@ -1,19 +1,24 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Res, UseInterceptors, } from '@nestjs/common';
 import { Response } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './models/create-order.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { HasPermission } from 'src/permission/has-permission.decorator';
 
+// @UseGuards(AuthGuard)
 @Controller('orders')
 export class OrderController {
     constructor(private readonly orderService: OrderService) { }
 
     @Get()
+    @HasPermission('Orders')
     async getAllOrders(@Query('page') page: number = 1) {
         return this.orderService.paginateOrders(page);
     }
 
     @Post()
+    @HasPermission('Orders')
     async createOrder(@Body() createOrderDto: CreateOrderDto, @Res() res: Response) {
         try {
             const order = await this.orderService.create(createOrderDto);
@@ -25,6 +30,7 @@ export class OrderController {
     }
 
     @Delete(':orderId')
+    @HasPermission('Orders')
     async deleteOrder(
         @Param('orderId', ParseIntPipe) orderId: number,
         @Res() res: Response,
@@ -38,11 +44,13 @@ export class OrderController {
     }
 
     @Get(':orderId')
+    @HasPermission('Orders')
     async getOrderById(@Param('orderId', ParseIntPipe) orderId: number) {
         return await this.orderService.getOrderById(orderId);
     }
 
     @Get('export/:orderId')
+    @HasPermission('Orders')
     async exportOrderById(@Param('orderId', ParseIntPipe) orderId: number, @Res() res: Response) {
         try {
             const readable = await this.orderService.exportOrderById(orderId);

@@ -39,7 +39,19 @@ export class UserService {
     }
 
     async findOne(condition): Promise<any> {
-        return this.prisma.user.findUnique({ ...condition, include: { role: true } });
+        return this.prisma.user.findUnique({
+            ...condition, include: {
+                role: {
+                    include: {
+                        rolePermissions: {
+                            include: {
+                                permission: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     async create(body): Promise<User> {
