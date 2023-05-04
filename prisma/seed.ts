@@ -18,7 +18,7 @@ async function main() {
         data: {
             firstName: "admin",
             lastName: "admin",
-            email: "admin@admin.com",
+            email: "a@admin.com",
             password: "$2b$12$ihSmkgjDOe09o5d/ZrvOTOEGbL49NhogAqSdQfGtiUowaS87SCDNi",
             roleId: 1
 
@@ -28,9 +28,29 @@ async function main() {
         data: {
             firstName: "user",
             lastName: "user",
-            email: "user@user.com",
+            email: "u@user.com",
             password: "$2b$12$R6nQD0samMfhdnZ1mCtZxOTZOGL/TeAOJvXgT7mgNvA3MgDaBahbi",
+            roleId: 4
+
+        }
+    })
+    const editor = await prisma.user.create({
+        data: {
+            firstName: "editor",
+            lastName: "editor",
+            email: "e@editor.com",
+            password: "$2b$12$eBkSxTflQTulHlzDdYLzUeokNzG/12jr5AZEOf.igUBsga8zSNLXy",
             roleId: 2
+
+        }
+    })
+    const viewer = await prisma.user.create({
+        data: {
+            firstName: "viewer",
+            lastName: "viewer",
+            email: "v@viewer.com",
+            password: "$2b$12$yjCAVDunEV4SdYB4yzYThewJeL1k3S6QP3eio44XN.1AXvIAf7DJW",
+            roleId: 3
 
         }
     })
