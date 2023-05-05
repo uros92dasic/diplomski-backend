@@ -27,6 +27,38 @@ export class ProductService {
         }
     }
 
+    async paginateExcludeUser(page = 1, userId: number) {
+        const take = 10;
+        const skip = (page - 1) * take;
+
+        const products = await this.prisma.product.findMany({
+            where: {
+                userId: {
+                    not: userId
+                }
+            },
+            take,
+            skip
+        });
+
+        const total = await this.prisma.product.count({
+            where: {
+                userId: {
+                    not: userId
+                }
+            }
+        });
+
+        return {
+            data: products,
+            meta: {
+                total,
+                page,
+                lastPage: Math.ceil(total / take)
+            }
+        }
+    }
+
     findAll() {
         return this.prisma.product.findMany();
     }
