@@ -17,6 +17,16 @@ export class ProductController {
         return this.productService.paginate(page);
     }
 
+    @Get('/orders')
+    @HasPermission('Products')
+    getAllExcludeUser(
+        @Query('page') page: number = 1,
+        @Query('userId') userId: string
+    ) {
+        return this.productService.paginateExcludeUser(page, parseInt(userId));
+    }
+
+
     @Post()
     @HasPermission('Products')
     async create(@Body() body: CreateProductDto): Promise<Product> {
