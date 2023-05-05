@@ -1,13 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { Role } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateRoleDto } from './models/create-role.dto';
 import { UpdateRoleDto } from './models/update-role.dto';
 import { HasPermission } from 'src/permission/has-permission.decorator';
-import { PermissionGuard } from 'src/permission/permission.guard';
 
-@UseGuards(AuthGuard, PermissionGuard)
+@UseGuards(AuthGuard)
 @Controller('roles')
 export class RoleController {
     constructor(private readonly roleService: RoleService) { }

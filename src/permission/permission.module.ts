@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PermissionController } from './permission.controller';
 import { PermissionService } from './permission.service';
 import { CommonModule } from 'src/common/common.module';
@@ -13,7 +13,7 @@ import { RoleModule } from 'src/role/role.module';
     CommonModule,
     AuthModule,
     UserModule,
-    forwardRef(() => RoleModule)
+    RoleModule
   ],
   controllers: [PermissionController],
   providers: [PrismaService, PermissionService, PermissionGuard],

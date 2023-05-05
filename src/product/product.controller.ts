@@ -6,7 +6,7 @@ import { Product } from '@prisma/client';
 import { UpdateProductDto } from './models/update-product.dto';
 import { HasPermission } from 'src/permission/has-permission.decorator';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('products')
 export class ProductController {
     constructor(private productService: ProductService) { }
