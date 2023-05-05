@@ -1,12 +1,11 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Patch, Post, Query, Res, UseInterceptors, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res, UseGuards, } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './models/create-order.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { HasPermission } from 'src/permission/has-permission.decorator';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('orders')
 export class OrderController {
     constructor(private readonly orderService: OrderService) { }

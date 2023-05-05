@@ -9,7 +9,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { Request } from 'express';
 import { HasPermission } from 'src/permission/has-permission.decorator';
 
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('users')
 export class UserController {
     constructor(
@@ -65,9 +65,13 @@ export class UserController {
         @Body('password') password: string,
         @Body('passwordConfirm') passwordConfirm: string,
     ) {
+        if (!password.trim() || !passwordConfirm.trim()) {
+            throw new HttpException('Password and password confirm fields cannot be empty!', HttpStatus.BAD_REQUEST);
+        }
         if (password !== passwordConfirm) {
             throw new HttpException('Passwords do not match!', HttpStatus.BAD_REQUEST);
         }
+
         const hashed = await bcrypt.hash(password, 12)
 
         const userId = await this.authService.userId(request);
