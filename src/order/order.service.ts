@@ -4,6 +4,11 @@ import { CreateOrderDto } from './models/create-order.dto';
 import { Readable } from 'stream';
 import * as Papa from 'papaparse';
 
+interface ChartResult {
+    date: string;
+    total: BigInt;
+}
+
 @Injectable()
 export class OrderService {
     constructor(private readonly prisma: PrismaService) { }
@@ -145,6 +150,25 @@ export class OrderService {
         readable.push(null);
 
         return readable;
+    }
+
+    async chart(): Promise<any> {
+        const result = (await this.prisma.$queryRaw`
+            SELECT to_char(o."createdAt", 'YYYY-MM-DD') as date, sum(p.price * i.quantity) as total
+            FROM "Order" o
+            JOIN "OrderItem" i on o.id = i."orderId"
+            JOIN "Product" p on i."productId" = p.id
+            GROUP BY date;
+        `) as ChartResult[];
+
+        const formattedResult = result.map(item => {
+            return {
+                date: item.date,
+                total: item.total.toString(),
+            };
+        });
+
+        return formattedResult;
     }
 
 }

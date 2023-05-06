@@ -10,6 +10,11 @@ import { HasPermission } from 'src/permission/has-permission.decorator';
 export class OrderController {
     constructor(private readonly orderService: OrderService) { }
 
+    @Get('chart')
+    async chart() {
+        return this.orderService.chart();
+    }
+
     @Get()
     @HasPermission('Orders')
     async getAllOrders(@Query('page') page: number = 1) {
