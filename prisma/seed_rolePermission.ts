@@ -8,6 +8,7 @@ export const seedRolePermission = async () => {
     const data = fs.readFileSync('./prisma/seed_csv_files/rolePermission.csv', 'utf8');
     const csvData = data.toString();
     const parsedCsvData = parse(csvData).data;
+
     if (parsedCsvData) {
         for (let index = 0; index < parsedCsvData.length; index++) {
             if (index === 0 || parsedCsvData[index] == '')
