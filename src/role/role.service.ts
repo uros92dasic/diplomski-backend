@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoleDto } from './models/create-role.dto';
@@ -130,6 +130,22 @@ export class RoleService {
     }
 
     async remove(id: number): Promise<any> {
+        // Check if there's a user with the given role
+        const userWithRole = await this.prisma.user.findFirst({
+            where: {
+                roleId: id,
+            },
+        });
+
+        // If a user with the role exists, throw an HTTP exception
+        if (userWithRole) {
+            throw new HttpException(
+                'The role cannot be deleted as it is assigned to a user.',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
+        // If no user with the role exists, proceed with deletion
         // First, delete the related RolePermission records
         await this.prisma.rolePermission.deleteMany({
             where: {

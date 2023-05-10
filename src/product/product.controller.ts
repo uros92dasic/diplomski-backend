@@ -6,17 +6,18 @@ import { Product } from '@prisma/client';
 import { UpdateProductDto } from './models/update-product.dto';
 import { HasPermission } from 'src/permission/has-permission.decorator';
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller('products')
 export class ProductController {
     constructor(private productService: ProductService) { }
 
     @Get()
-    @HasPermission('Products')
+    // @HasPermission('Products')
     getAll(@Query('page') page: number = 1) {
         return this.productService.paginate(page);
     }
 
+    @UseGuards(AuthGuard)
     @Get('/orders')
     @HasPermission('Products')
     getAllExcludeUser(
@@ -26,7 +27,7 @@ export class ProductController {
         return this.productService.paginateExcludeUser(page, parseInt(userId));
     }
 
-
+    @UseGuards(AuthGuard)
     @Post()
     @HasPermission('Products')
     async create(@Body() body: CreateProductDto): Promise<Product> {
@@ -37,17 +38,19 @@ export class ProductController {
                 description: body.description,
                 image: body.image,
                 price: +(body.price),
-                userId: body.userId
+                userId: +(body.userId)
             }
         });
     }
 
+    @UseGuards(AuthGuard)
     @Get(':id')
     @HasPermission('Products')
     async get(@Param('id') id: number) {
         return this.productService.findOne({ where: { id: +id } })
     }
 
+    @UseGuards(AuthGuard)
     @Patch(':id')
     @HasPermission('Products')
     async update(
@@ -57,6 +60,7 @@ export class ProductController {
         return this.productService.update(+id, body);
     }
 
+    @UseGuards(AuthGuard)
     @Delete(':id')
     @HasPermission('Products')
     async remove(@Param('id') id: number) {

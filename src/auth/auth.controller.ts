@@ -21,17 +21,28 @@ export class AuthController {
             throw new HttpException('Passwords do not match!', HttpStatus.BAD_REQUEST);
         }
 
-        const hashed = await bcrypt.hash(body.password, 12)
+        const existingUser = await this.userService.findOne({
+            where: {
+                email: body.email,
+            },
+        });
+
+        if (existingUser) {
+            throw new HttpException('Email is already taken!', HttpStatus.CONFLICT);
+        }
+
+        const hashed = await bcrypt.hash(body.password, 12);
         return this.userService.create({
             data: {
                 firstName: body.firstName,
                 lastName: body.lastName,
                 email: body.email,
                 password: hashed,
-                roleId: 4
-            }
+                roleId: 4,
+            },
         });
     }
+
 
     @Post('login')
     async login(
@@ -39,17 +50,17 @@ export class AuthController {
         @Body('password') password: string,
         @Res({ passthrough: true }) response: Response
     ) {
-        const user = this.userService.findOne({ where: { email: email } });
+        const user = await this.userService.findOne({ where: { email: email } });
 
         if (!user) {
             throw new HttpException('User not found.', HttpStatus.BAD_REQUEST);
         }
 
-        if (!await bcrypt.compare(password, (await user).password)) {
+        if (!await bcrypt.compare(password, user.password)) {
             throw new HttpException('Invalid credentials.', HttpStatus.BAD_REQUEST);
         }
 
-        const jwt = await this.jwtService.signAsync({ id: (await user).id });
+        const jwt = await this.jwtService.signAsync({ id: user.id });
 
         response.cookie('jwt', jwt, { httpOnly: true });
 
