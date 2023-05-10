@@ -10,9 +10,9 @@ import { HasPermission } from 'src/permission/has-permission.decorator';
 export class OrderController {
     constructor(private readonly orderService: OrderService) { }
 
-    @Get('chart')
-    async chart() {
-        return this.orderService.chart();
+    @Get('chart/:year/:month')
+    async chart(@Param('year') year: number, @Param('month') month: number) {
+        return this.orderService.chart(year, month);
     }
 
     @Get()
