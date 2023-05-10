@@ -10,7 +10,10 @@ export class ProductService {
         const take = 10;
         const skip = (page - 1) * take;
 
-        const roles = await this.prisma.product.findMany({
+        const products = await this.prisma.product.findMany({
+            include: {
+                user: true
+            },
             take,
             skip
         });
@@ -18,7 +21,7 @@ export class ProductService {
         const total = await this.prisma.product.count();
 
         return {
-            data: roles,
+            data: products,
             meta: {
                 total,
                 page,
