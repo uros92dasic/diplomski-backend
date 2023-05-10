@@ -152,12 +152,13 @@ export class OrderService {
         return readable;
     }
 
-    async chart(): Promise<any> {
+    async chart(year: number, month: number): Promise<any> {
         const result = (await this.prisma.$queryRaw`
             SELECT to_char(o."createdAt", 'YYYY-MM-DD') as date, sum(p.price * i.quantity) as total
             FROM "Order" o
             JOIN "OrderItem" i on o.id = i."orderId"
             JOIN "Product" p on i."productId" = p.id
+            WHERE EXTRACT(YEAR FROM o."createdAt") = ${+(year)} AND EXTRACT(MONTH FROM o."createdAt") = ${+(month)}
             GROUP BY date;
         `) as ChartResult[];
 
@@ -170,5 +171,6 @@ export class OrderService {
 
         return formattedResult;
     }
+
 
 }
