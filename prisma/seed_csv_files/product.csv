@@ -1,26 +1,36 @@
 TITLE,DESCRIPTION,IMAGE,PRICE,USERID
-test1admin,test1,test1,410,1
-test2admin,test2,test2,420,1
-test3admin,test3,test3,430,1
-test4admin,test4,test4,440,1
-test5admin,test5,test5,450,1
-test1user,test1,test1,110,2
-test2user,test2,test2,120,2
-test3user,test3,test3,130,2
-test4user,test4,test4,140,2
-test5user,test5,test5,150,2
-test6user,test6,test6,160,2
-test7user,test7,test7,170,2
-test8user,test8,test8,180,2
-test9user,test9,test9,190,2
-test10user,test10,test10,200,2
-test11user,test11,test11,210,2
-test12user,test12,test12,220,2
-test13user,test13,test13,230,2
-test14user,test14,test14,240,2
-test15user,test15,test15,250,2
-test16user,test16,test16,260,2
-test17user,test17,test17,270,2
-test18user,test18,test18,280,2
-test19user,test19,test19,290,2
-test20user,test20,test20,300,2
+Nokia 3310 telefon,Najjaci telefon ikada,http://localhost:8000/api/uploads/nokia3310.jpg,200,1
+Samsung S2 telefon,Najkvalitetniji samsungov telefon,http://localhost:8000/api/uploads/samsungs2.jpg,300,1
+IPhone 2 telefon,Jedan od boljih IPhone telefona,http://localhost:8000/api/uploads/iphone2.jpg,400,1
+GameBoy konzola,Konzola za poneti,http://localhost:8000/api/uploads/gameboy.png,500,1
+XBox konzola,XBox je bolji od PlayStationa,http://localhost:8000/api/uploads/xbox.png,600,1
+PlayStation 5 konzola,PlayStation je bolji od XBoxa,http://localhost:8000/api/uploads/ps5.png,700,1
+Laptop racunar,U odlicnom je stanju,http://localhost:8000/api/uploads/laptop.png,1000,1
+Desktop racunar,Racunar sa punom opremom,http://localhost:8000/api/uploads/racunar.png,1200,1
+Tastatura za racunar,Obicna tastatura,http://localhost:8000/api/uploads/tastatura.png,200,1
+Mis za racunar,Obican mis,http://localhost:8000/api/uploads/mis.png,100,1
+Slusalice,Blutut slusalice u boji,http://localhost:8000/api/uploads/slusalice.png,200,1
+Zvucnici,Mnogo jaki zvucnici,http://localhost:8000/api/uploads/zvucnici.png,400,1
+Monitor,Solidan monitor za laptop ili racunar,http://localhost:8000/api/uploads/monitor.png,500,1
+Cipele,Description za cipele,http://localhost:8000/api/uploads/cipele.png,300,2
+Cizme,Description za cizme,http://localhost:8000/api/uploads/cizme.png,200,2
+Cokule,Description za cokule,http://localhost:8000/api/uploads/cokule.png,400,2
+Crna haljina i beli blejzer,Dugacak description za zensku odecu,http://localhost:8000/api/uploads/crnaHaljinaBeliBlejzer.png,600,2
+Farmerke,Description za farmerke,http://localhost:8000/api/uploads/farmerke.png,200,2
+Frizider,Description za frizider,http://localhost:8000/api/uploads/frizider.png,800,1
+Kosulja,Description za kosulju,http://localhost:8000/api/uploads/kosulja.png,200,2
+Lego Batman igrica,Zato sto sam Betmen!,http://localhost:8000/api/uploads/legoBatman.png,100,2
+Lego set Duplo,Kockice za malu decu,http://localhost:8000/api/uploads/legoDuplo.png,200,2
+Lego set Duplo Cars,Munja Mekvin broj 95,http://localhost:8000/api/uploads/legoDuploCars.png,300,2
+Lego set StarWars,Luk ja sam tvoj otac,http://localhost:8000/api/uploads/legoStarWars.png,400,2
+Masina za sudove,Para vredi ruke ustedi,http://localhost:8000/api/uploads/masinaZaSudove.png,600,1
+Masina za susenje vesa,Em sto susi em greje kupatilo,http://localhost:8000/api/uploads/masinaZaSusenjeVesa.png,500,1
+Mikrotalasna,Sunca i ledi,http://localhost:8000/api/uploads/mikrotalasna.png,300,1
+Pegla,Pegla za odecu ne za kosu,http://localhost:8000/api/uploads/pegla.png,200,1
+Sporet,Przi kuva pece krcka,http://localhost:8000/api/uploads/sporet.png,600,1
+Stikle,Description za stikle,http://localhost:8000/api/uploads/stikle.png,400,2
+Torba,Description za torbu,http://localhost:8000/api/uploads/torba.png,200,2
+Trenerka,Description za komplet trenerku,http://localhost:8000/api/uploads/trenerka.png,300,2
+Usisivac,Usisava i finu prasinu,http://localhost:8000/api/uploads/usisivac.png,400,1
+Masina za pranje vesa,Pere i beli i crni i ves u boji,http://localhost:8000/api/uploads/vesMasina.png,700,1
+Stolica za gaming,Bez stolice nema igrice,http://localhost:8000/api/uploads/stolica.jpg,500,1

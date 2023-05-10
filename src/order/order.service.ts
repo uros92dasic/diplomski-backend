@@ -17,7 +17,7 @@ export class OrderService {
         const take = 10;
         const skip = (page - 1) * take;
 
-        const roles = await this.prisma.order.findMany({
+        const orders = await this.prisma.order.findMany({
             take,
             skip,
             include: {
@@ -41,7 +41,7 @@ export class OrderService {
         const total = await this.prisma.order.count();
 
         return {
-            data: roles,
+            data: orders,
             meta: {
                 total,
                 page,
