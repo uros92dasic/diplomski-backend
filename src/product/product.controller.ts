@@ -13,8 +13,11 @@ export class ProductController {
 
     @Get()
     // @HasPermission('Products')
-    getAll(@Query('page') page: number = 1) {
-        return this.productService.paginate(page);
+    getAll(
+        @Query('page') page: number = 1,
+        @Query('search') searchTerm: string = ''
+    ) {
+        return this.productService.paginate(page, searchTerm);
     }
 
     @UseGuards(AuthGuard)
@@ -22,9 +25,10 @@ export class ProductController {
     @HasPermission('Products')
     getAllExcludeUser(
         @Query('page') page: number = 1,
-        @Query('userId') userId: string
+        @Query('userId') userId: string,
+        @Query('search') searchTerm: string = ''
     ) {
-        return this.productService.paginateExcludeUser(page, parseInt(userId));
+        return this.productService.paginateExcludeUser(page, parseInt(userId), searchTerm);
     }
 
     @UseGuards(AuthGuard)
