@@ -6,16 +6,36 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProductService {
     constructor(private prisma: PrismaService) { }
 
-    async paginate(page = 1) {
+    async paginate(page = 1, searchTerm = '') {
         const take = 10;
         const skip = (page - 1) * take;
 
         const products = await this.prisma.product.findMany({
+            where: {
+                AND: [
+                    {
+                        OR: [
+                            {
+                                title: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                },
+                            },
+                            {
+                                description: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
             include: {
-                user: true
+                user: true,
             },
             take,
-            skip
+            skip,
         });
 
         const total = await this.prisma.product.count();
@@ -30,18 +50,38 @@ export class ProductService {
         }
     }
 
-    async paginateExcludeUser(page = 1, userId: number) {
+    async paginateExcludeUser(page = 1, userId: number, searchTerm = '') {
         const take = 10;
         const skip = (page - 1) * take;
 
         const products = await this.prisma.product.findMany({
             where: {
-                userId: {
-                    not: userId
-                }
+                AND: [
+                    {
+                        userId: {
+                            not: userId,
+                        },
+                    },
+                    {
+                        OR: [
+                            {
+                                title: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                },
+                            },
+                            {
+                                description: {
+                                    contains: searchTerm,
+                                    mode: 'insensitive',
+                                },
+                            },
+                        ],
+                    },
+                ],
             },
             take,
-            skip
+            skip,
         });
 
         const total = await this.prisma.product.count({
@@ -92,4 +132,16 @@ export class ProductService {
     async remove(id: number): Promise<any> {
         return this.prisma.product.delete({ where: { id } })
     }
+
+    async search(query: string) {
+        return this.prisma.product.findMany({
+            where: {
+                title: {
+                    contains: query,
+                    mode: 'insensitive', // This makes the search case-insensitive
+                },
+            },
+        });
+    }
+
 }
