@@ -1,14 +1,20 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Res, UseGuards, } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Req, Res, UseGuards, } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './models/create-order.dto';
 import { HasPermission } from 'src/permission/has-permission.decorator';
+import { AuthService } from 'src/auth/auth.service';
+import { UserService } from 'src/user/user.service';
 
 @UseGuards(AuthGuard)
 @Controller('orders')
 export class OrderController {
-    constructor(private readonly orderService: OrderService) { }
+    constructor(
+        private authService: AuthService,
+        private userService: UserService,
+        private orderService: OrderService
+    ) { }
 
     @Get('chart/:year/:month')
     async chart(@Param('year') year: number, @Param('month') month: number) {
@@ -17,8 +23,10 @@ export class OrderController {
 
     @Get()
     @HasPermission('Orders')
-    async getAllOrders(@Query('page') page: number = 1) {
-        return this.orderService.paginateOrders(page);
+    async getAllOrders(@Req() request: Request, @Query('page') page: number = 1) {
+        const userId = await this.authService.userId(request);
+        const user = await this.userService.findOne({ where: { id: +userId }, include: { role: true } });
+        return this.orderService.paginateOrders(page, user);
     }
 
     @Post()

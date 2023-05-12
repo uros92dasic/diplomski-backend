@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './models/create-order.dto';
 import { Readable } from 'stream';
 import * as Papa from 'papaparse';
+import { UserEntity } from 'src/user/models/user.entity';
 
 interface ChartResult {
     date: string;
@@ -13,13 +14,17 @@ interface ChartResult {
 export class OrderService {
     constructor(private readonly prisma: PrismaService) { }
 
-    async paginateOrders(page = 1) {
+    async paginateOrders(page = 1, user: UserEntity) {
         const take = 10;
         const skip = (page - 1) * take;
+
+        const isAdmin = user.role.name === 'Admin';
+        const where = isAdmin ? {} : { userId: user.id };
 
         const orders = await this.prisma.order.findMany({
             take,
             skip,
+            where,
             include: {
                 orderItems: {
                     include: {
@@ -38,7 +43,7 @@ export class OrderService {
             }
         });
 
-        const total = await this.prisma.order.count();
+        const total = await this.prisma.order.count({ where });
 
         return {
             data: orders,
@@ -49,6 +54,7 @@ export class OrderService {
             }
         }
     }
+
 
     async create(createOrderDto: CreateOrderDto) {
         // Check if the cart is empty
