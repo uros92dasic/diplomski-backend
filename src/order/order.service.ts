@@ -51,6 +51,11 @@ export class OrderService {
     }
 
     async create(createOrderDto: CreateOrderDto) {
+        // Check if the cart is empty
+        if (createOrderDto.products.length === 0) {
+            throw new Error('Cannot create an empty order');
+        }
+
         // Create the order
         const order = await this.prisma.order.create({
             data: {
@@ -64,6 +69,11 @@ export class OrderService {
 
         // Loop through the products and create order items
         for (const productData of createOrderDto.products) {
+            // Check if the quantity is not zero
+            if (productData.quantity <= 0) {
+                throw new Error('Product quantity must be greater than 0');
+            }
+
             // Find the product to get its price
             const product = await this.prisma.product.findUnique({
                 where: { id: +(productData.productId) },
