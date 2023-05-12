@@ -15,9 +15,10 @@ export class ProductController {
     // @HasPermission('Products')
     getAll(
         @Query('page') page: number = 1,
-        @Query('search') searchTerm: string = ''
+        @Query('search') searchTerm: string = '',
+        @Query('userId') userId: number = null
     ) {
-        return this.productService.paginate(page, searchTerm);
+        return this.productService.paginate(page, searchTerm, userId);
     }
 
     @UseGuards(AuthGuard)
