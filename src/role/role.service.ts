@@ -9,7 +9,7 @@ export class RoleService {
     constructor(private prisma: PrismaService) { }
 
     async paginate(page = 1) {
-        const take = 10;
+        const take = 20;
         const skip = (page - 1) * take;
 
         const roles = await this.prisma.role.findMany({
