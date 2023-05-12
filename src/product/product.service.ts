@@ -1,36 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { Product } from '@prisma/client';
+import { Prisma, Product } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ProductService {
     constructor(private prisma: PrismaService) { }
 
-    async paginate(page = 1, searchTerm = '') {
+    async paginate(page = 1, searchTerm = '', userId = null) {
         const take = 10;
         const skip = (page - 1) * take;
+        const where: Prisma.ProductWhereInput = {
+            AND: [
+                {
+                    OR: [
+                        {
+                            title: {
+                                contains: searchTerm,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            description: {
+                                contains: searchTerm,
+                                mode: 'insensitive',
+                            },
+                        },
+                    ],
+                },
+                ...(+userId ? [{ userId: +(userId) }] : []),
+            ],
+        };
 
         const products = await this.prisma.product.findMany({
-            where: {
-                AND: [
-                    {
-                        OR: [
-                            {
-                                title: {
-                                    contains: searchTerm,
-                                    mode: 'insensitive',
-                                },
-                            },
-                            {
-                                description: {
-                                    contains: searchTerm,
-                                    mode: 'insensitive',
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
+            where,
             include: {
                 user: true,
             },
@@ -38,7 +40,9 @@ export class ProductService {
             skip,
         });
 
-        const total = await this.prisma.product.count();
+        const total = await this.prisma.product.count({
+            where,
+        });
 
         return {
             data: products,
@@ -53,43 +57,40 @@ export class ProductService {
     async paginateExcludeUser(page = 1, userId: number, searchTerm = '') {
         const take = 10;
         const skip = (page - 1) * take;
+        const where: Prisma.ProductWhereInput = {
+            AND: [
+                {
+                    userId: {
+                        not: userId,
+                    },
+                },
+                {
+                    OR: [
+                        {
+                            title: {
+                                contains: searchTerm,
+                                mode: 'insensitive',
+                            },
+                        },
+                        {
+                            description: {
+                                contains: searchTerm,
+                                mode: 'insensitive',
+                            },
+                        },
+                    ],
+                },
+            ],
+        }
 
         const products = await this.prisma.product.findMany({
-            where: {
-                AND: [
-                    {
-                        userId: {
-                            not: userId,
-                        },
-                    },
-                    {
-                        OR: [
-                            {
-                                title: {
-                                    contains: searchTerm,
-                                    mode: 'insensitive',
-                                },
-                            },
-                            {
-                                description: {
-                                    contains: searchTerm,
-                                    mode: 'insensitive',
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
+            where,
             take,
             skip,
         });
 
         const total = await this.prisma.product.count({
-            where: {
-                userId: {
-                    not: userId
-                }
-            }
+            where,
         });
 
         return {
